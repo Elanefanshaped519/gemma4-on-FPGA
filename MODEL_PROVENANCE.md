@@ -6,7 +6,7 @@
 - Upstream revision/commit: not pinned in current deployment contract (recommend pinning before public replication)
 
 ## Transformations
-- Distillation/quantization pipeline: Gemma-based teacher distillation to INT4/KAN deployment weights
+- Distillation/quantization pipeline: Gemma-based teacher distillation to a smaller custom INT4/KAN deployment model (`weights_int4_FINAL.bin`)
 - Weight format: INT4/KAN
 - Tokenizer source: `/home/sovryn/tokenizers/dealignai_gemma/tokenizer.json`
 
@@ -19,3 +19,4 @@
 ## Notes
 - This release contains deployment artifacts only.
 - Re-training and re-synthesis are out of scope.
+- Teacher line and deployed model are not equivalent in size/residency; deployment uses a compact distilled artifact path.

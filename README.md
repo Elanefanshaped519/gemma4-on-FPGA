@@ -36,6 +36,12 @@ Note:
   - `for_other_fpgas/tokenizer/tokenizer.json`
   - SHA-256: `3151898c022536cf420b732dd2fcbf8e7c456cd39711a27f9b82a7ced72b6c83`
 
+## Memory Fit Clarification (Important)
+- We do **not** claim that a full dense 31B checkpoint is fully resident inside KV260 DDR.
+- 31B is the teacher/model line reference.
+- The deployed runtime artifact is our **own smaller distilled deployment model** in `weights_int4_FINAL.bin`.
+- Inference uses a bounded working set and hardware scheduling/streaming, not a naive full-resident 31B memory layout.
+
 ## Why We Used The CRACK Variant
 Short answer: bring-up reliability and debugging clarity.
 
