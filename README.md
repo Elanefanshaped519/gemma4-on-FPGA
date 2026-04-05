@@ -21,6 +21,15 @@ Important:
 This is a deployment artifact repository.
 It is not a training, distillation, or Vivado source repository.
 
+## Gemma Model Used
+- Teacher model ID used for this artifact line:
+  - `dealignai/Gemma-4-31B-JANG_4M-CRACK`
+- Source of truth in this repo:
+  - `for_other_fpgas/model_contract.json` (`teacher_model_id`)
+- Tokenizer pin for this deployment:
+  - `for_other_fpgas/tokenizer/tokenizer.json`
+  - SHA-256: `3151898c022536cf420b732dd2fcbf8e7c456cd39711a27f9b82a7ced72b6c83`
+
 ## Architecture Rationale
 Why this stack was chosen for FPGA deployment:
 
