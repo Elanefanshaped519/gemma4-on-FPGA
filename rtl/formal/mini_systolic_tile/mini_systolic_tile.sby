@@ -1,0 +1,16 @@
+[options]
+mode prove
+depth 6
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv hardware/designs/sovryn_pan_stem_mini_systolic_tile_baseline.v hardware/formal/mini_systolic_tile/mini_systolic_tile_formal.sv
+prep -top sovryn_pan_stem_mini_systolic_tile_formal
+async2sync
+opt_clean
+
+[files]
+hardware/designs/sovryn_pan_stem_mini_systolic_tile_baseline.v
+hardware/formal/mini_systolic_tile/mini_systolic_tile_formal.sv

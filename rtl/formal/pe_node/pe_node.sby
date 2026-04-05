@@ -1,0 +1,16 @@
+[options]
+mode prove
+depth 6
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv hardware/designs/sovryn_pan_stem_pe_node_baseline.v hardware/formal/pe_node/pe_node_formal.sv
+prep -top sovryn_pan_stem_pe_node_formal
+async2sync
+opt_clean
+
+[files]
+hardware/designs/sovryn_pan_stem_pe_node_baseline.v
+hardware/formal/pe_node/pe_node_formal.sv

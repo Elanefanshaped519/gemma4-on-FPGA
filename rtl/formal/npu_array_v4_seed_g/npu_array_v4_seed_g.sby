@@ -1,0 +1,21 @@
+[options]
+mode prove
+depth 8
+
+[engines]
+smtbmc z3
+
+[script]
+read -formal hardware/designs/sovryn_pan_stem_npu_array_v4_seed_g_issue.v
+read -formal hardware/designs/sovryn_pan_stem_npu_array_v4_seed_g_state.v
+read -formal hardware/designs/sovryn_pan_stem_npu_array_v4_seed_g_tile.v
+read -formal hardware/designs/sovryn_pan_stem_npu_array_v4_seed_g_baseline.v
+read -formal hardware/formal/npu_array_v4_seed_g/npu_array_v4_seed_g_formal.sv
+prep -top sovryn_pan_stem_npu_array_v4_seed_g_formal
+
+[files]
+hardware/designs/sovryn_pan_stem_npu_array_v4_seed_g_issue.v
+hardware/designs/sovryn_pan_stem_npu_array_v4_seed_g_state.v
+hardware/designs/sovryn_pan_stem_npu_array_v4_seed_g_tile.v
+hardware/designs/sovryn_pan_stem_npu_array_v4_seed_g_baseline.v
+hardware/formal/npu_array_v4_seed_g/npu_array_v4_seed_g_formal.sv

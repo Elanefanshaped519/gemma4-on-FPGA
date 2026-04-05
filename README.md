@@ -4,6 +4,7 @@ This repository contains a reproducible deployment bundle for running Gemma-base
 
 ## Included Files
 - `for_other_fpgas/` (bundle with `.bit`, split `.bin` parts, contract, tokenizer, hashes, and anchoring receipts)
+- `rtl/` (Verilog/SystemVerilog sources, formal files, and constraints)
 - `RELEASE_CHECKLIST.md`
 - `MODEL_PROVENANCE.md`
 - `LICENSE` / `NOTICE`
@@ -26,6 +27,14 @@ This release corresponds to the deployed **36-core hardware profile**.
 Note:
 - Earlier internal/experimental documents referenced 64-core variants.
 - Those 64-core references are not the source of truth for this released artifact line.
+
+## Where Is The Verilog Or VHDL?
+- Verilog/SystemVerilog is in:
+  - `rtl/designs/`
+  - `rtl/formal/`
+  - `rtl/constraints/`
+- In this bundle, hardware sources are provided as `.v` / `.sv` files.
+- No VHDL (`.vhd` / `.vhdl`) files are currently included.
 
 ## Gemma Model Used
 - Teacher model ID in this release line:

@@ -1,0 +1,16 @@
+[options]
+mode prove
+depth 4
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv hardware/designs/sovryn_pan_stem_systolic_array_16x16_baseline.v hardware/formal/systolic_array_16x16/systolic_array_16x16_formal.sv
+prep -top sovryn_pan_stem_systolic_array_16x16_formal
+async2sync
+opt_clean
+
+[files]
+hardware/designs/sovryn_pan_stem_systolic_array_16x16_baseline.v
+hardware/formal/systolic_array_16x16/systolic_array_16x16_formal.sv

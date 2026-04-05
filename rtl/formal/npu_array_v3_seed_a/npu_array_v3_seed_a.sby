@@ -1,0 +1,16 @@
+[options]
+mode bmc
+depth 12
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv hardware/designs/sovryn_pan_stem_npu_array_v3_seed_a_baseline.v hardware/formal/npu_array_v3_seed_a/npu_array_v3_seed_a_formal.sv
+prep -top sovryn_pan_stem_npu_array_v3_seed_a_formal
+async2sync
+opt_clean
+
+[files]
+hardware/designs/sovryn_pan_stem_npu_array_v3_seed_a_baseline.v
+hardware/formal/npu_array_v3_seed_a/npu_array_v3_seed_a_formal.sv

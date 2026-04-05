@@ -1,0 +1,18 @@
+[options]
+mode prove
+depth 2
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv hardware/designs/sovryn_pan_stem_systolic_array_16x16_baseline.v hardware/formal/scale_out_candidate/scale_out_candidate_formal.sv
+hierarchy -check -top sovryn_pan_stem_scale_out_candidate_formal
+proc
+async2sync
+memory -nomap
+opt_clean
+
+[files]
+hardware/designs/sovryn_pan_stem_systolic_array_16x16_baseline.v
+hardware/formal/scale_out_candidate/scale_out_candidate_formal.sv
