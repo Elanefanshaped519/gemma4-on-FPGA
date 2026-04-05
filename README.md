@@ -13,7 +13,7 @@ Use `for_other_fpgas/` as the bundle for porting/bring-up work on other FPGA tar
 
 Important:
 - `omni_titan_agi_top.bit` is board-specific and may not run unchanged on a different FPGA board.
-- `weights_int4_FINAL.bin` is not committed to Git due GitHub per-file size limits and must be transferred separately.
+- `weights_int4_FINAL.bin` is committed as 3 split parts (`weights_int4_FINAL.bin.part01..03`) to satisfy GitHub size limits.
 - `model_contract.json` and `tokenizer/` are included for deployment compatibility and migration reference.
 - Base L2 anchoring proof for `.bit`/`.bin` is included under `for_other_fpgas/BASE_L2_ANCHORING.md`.
 
